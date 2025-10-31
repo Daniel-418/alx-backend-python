@@ -6,7 +6,7 @@ def stream_users():
     if connection is None:
         return None
 
-    cur = connection.cursor(buffered=True)
+    cur = connection.cursor(buffered=True, dictionary=True)
 
     cur.execute("SELECT * FROM user_data;")
     while True:
