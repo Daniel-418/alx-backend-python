@@ -1,5 +1,6 @@
 import sqlite3
 import functools
+from datetime import datetime
 
 
 #### decorator to lof SQL queries
@@ -7,7 +8,8 @@ def log_queries(func):
     def wrapper(*args, **kwargs):
         query = args[0] if args else kwargs.get("query")
         result = func(*args, **kwargs)
-        print(query)
+        time = datetime.now()
+        print(f"{time.strftime('%Y-%m-%d %H:%M:%S')} -> {query}")
         return result
 
     return wrapper
