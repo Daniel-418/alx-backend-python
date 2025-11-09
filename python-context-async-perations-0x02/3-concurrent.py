@@ -17,7 +17,7 @@ async def async_fetch_older_users():
 
 async def fetch_concurrently():
     all_users, older_users = await asyncio.gather(
-        async_fetch_older_users(), async_fetch_older_users()
+        async_fetch_users(), async_fetch_older_users()
     )
     print("fetches complete.")
     print(f"All users: {all_users}")
@@ -25,3 +25,4 @@ async def fetch_concurrently():
 
 
 asyncio.run(fetch_concurrently())
+
