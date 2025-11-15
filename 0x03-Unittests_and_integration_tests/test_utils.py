@@ -25,7 +25,8 @@ class TestAccessNestedMap(unittest.TestCase):
         self, nested_map: Mapping, path: Sequence, result: Sequence
     ):
         """
-        Tests input and output
+        Tests input and output of the function in the util
+        so it works
         """
         self.assertEqual(
             utils.access_nested_map(nested_map=nested_map, path=path), result
@@ -35,13 +36,17 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map_exception(self, nested_map: Mapping,
                                          path: Sequence):
         """
-        Test the errors the function raises
+        Test the errors the function raises in the util file
+        so it works
         """
         with self.assertRaises(KeyError):
             utils.access_nested_map(nested_map=nested_map, path=path)
 
 
 class TestGetJson(unittest.TestCase):
+    """
+    class to test the get_json function so it is working properly
+    """
     @parameterized.expand(
         [
             ("http://example.com", {"payload": True}),
@@ -50,6 +55,9 @@ class TestGetJson(unittest.TestCase):
     )
     @patch("utils.get_json")
     def test_get_json(self, url: str, result: Dict, mocked_object: MagicMock):
+        """
+        test the parameterized function so it works
+        """
         mocked_object.return_value = result
         self.assertEqual(utils.get_json(url), result)
         mocked_object.assert_called_once()
@@ -57,10 +65,13 @@ class TestGetJson(unittest.TestCase):
 
 class TestMemoize(unittest.TestCase):
     """
-    Tests the memoize method in utils
+    Tests the memoize method in utils function so it works
     """
 
     def test_memoize(self):
+        """
+        method to test the memoize function so it is working properly
+        """
         class TestClass:
             def a_method(self):
                 return 42
