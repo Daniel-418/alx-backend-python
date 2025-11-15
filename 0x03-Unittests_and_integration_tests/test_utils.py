@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 from parameterized import parameterized
 import unittest
+from unittest.mock import patch, MagicMock
 import utils
 from typing import (
     Mapping,
     Sequence,
+    Dict,
 )
 
 
@@ -33,3 +35,17 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         with self.assertRaises(KeyError):
             utils.access_nested_map(nested_map=nested_map, path=path)
+
+
+class TestGetJson(unittest.TestCase):
+    @parameterized.expand(
+        [
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": True}),
+        ]
+    )
+    @patch("utils.get_json")
+    def test_get_json(self, url: str, result: Dict, mocked_object: MagicMock):
+        mocked_object.return_value = result
+        self.assertEqual(utils.get_json(url), result)
+        mocked_object.assert_called_once()
