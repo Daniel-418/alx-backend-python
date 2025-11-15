@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Tests the utils module
+"""
 from parameterized import parameterized
 import unittest
 from unittest.mock import patch, MagicMock
