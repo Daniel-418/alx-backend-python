@@ -14,10 +14,7 @@ from typing import (
 
 
 class TestAccessNestedMap(unittest.TestCase):
-    """
-    I'm putting this as a placeholder to pass the automated tests
-    the checker runs
-    """
+    
     @parameterized.expand(
         [
             ({"a": 1}, ("a",), 1),
