@@ -163,29 +163,29 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def test_public_repos(self):
         """
         Test the 'public_repos' method without a license.
-        
+
         It should return all repo names from the 'repos_payload'.
         """
         # Create an instance of the client (must be 'google' to match URLs)
         client_instance = client.GithubOrgClient("google")
-        
+
         # Call the method
         repos = client_instance.public_repos()
-        
+
         # Assert the result matches the 'expected_repos' fixture
         self.assertEqual(repos, self.expected_repos)
 
     def test_public_repos_with_license(self):
         """
         Test the 'public_repos' method with the 'apache-2.0' license.
-        
+
         It should return only the repos matching that license.
         """
         # Create an instance of the client
         client_instance = client.GithubOrgClient("google")
-        
+
         # Call the method with the license filter
         repos = client_instance.public_repos(license="apache-2.0")
-        
+
         # Assert the result matches the 'apache2_repos' fixture
         self.assertEqual(repos, self.apache2_repos)
