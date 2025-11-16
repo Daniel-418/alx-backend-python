@@ -5,7 +5,7 @@ from typing import (
     List,
     Dict,
 )
-from .utils import (
+from utils import (
     get_json,
     access_nested_map,
     memoize,
