@@ -97,7 +97,7 @@ class TestGithubOrgClient(unittest.TestCase):
             client.GithubOrgClient.has_license(
                 repo=repo, license_key=license_key
             ),
-        result
+            result
         )
 
 
