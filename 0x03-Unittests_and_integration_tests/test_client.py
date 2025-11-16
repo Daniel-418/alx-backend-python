@@ -12,6 +12,7 @@ from typing import (
     Dict,
 )
 
+
 class TestGithubOrgClient(unittest.TestCase):
     """
     class to test the client module that exits in this folder
@@ -23,7 +24,9 @@ class TestGithubOrgClient(unittest.TestCase):
         ]
     )
     @patch('client.get_json')
-    def test_org(self, org_name: str, result: dict, mocked_object: MagicMock):
+    def test_org(self, org_name: str,
+                 result: dict,
+                 mocked_object: MagicMock):
         """
         Test to test that the org is called correctly
         """
@@ -38,7 +41,9 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         Test to test the public repos urls
         """
-        known_org_payload = {"repos_url": "https://api.github.com/orgs/test/repos"}
+        known_org_payload = {
+            "repos_url": "https://api.github.com/orgs/test/repos"
+        }
         with patch("client.GithubOrgClient.org", 
                    new_callable=PropertyMock,
                    return_value=known_org_payload) as mock_method:
@@ -46,7 +51,9 @@ class TestGithubOrgClient(unittest.TestCase):
 
             result_url = dummy._public_repos_url
 
-            self.assertEqual(result_url, known_org_payload['repos_url'])
+            self.assertEqual(
+                result_url, known_org_payload['repos_url']
+            )
             mock_method.assert_called_once()
 
     @patch('client.get_json')
@@ -61,9 +68,13 @@ class TestGithubOrgClient(unittest.TestCase):
         ]
         with patch('client.GithubOrgClient._public_repos_url', 
                    new_callable=PropertyMock,
-                   return_value="https://api.github.com/orgs/test/repos") as mocked_method:
+                   return_value="https://api.github.com/" + 
+                   "orgs/test/repos") as mocked_method:
             dummy = client.GithubOrgClient("google")
-            self.assertEqual(dummy.public_repos(), ["repo-one", "repo-two", "repo-three"])
+            self.assertEqual(dummy.public_repos(), [
+                "repo-one", "repo-two", "repo-three"
+            ])
             mocked_method.assert_called_once()
             mocked_object.assert_called_once()
-            mocked_object.assert_called_once_with("https://api.github.com/orgs/test/repos")
+            mocked_object.assert_called_once_with("https://api.github.com" +
+                "/orgs/test/repos")
