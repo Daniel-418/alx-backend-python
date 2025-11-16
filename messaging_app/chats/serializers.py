@@ -24,6 +24,6 @@ class ConversationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# serializer.Charfield
+# serializer.CharField
 # serializers.SerializerMethodField()
 # serializers.ValidationError
