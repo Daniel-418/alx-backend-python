@@ -99,7 +99,10 @@ class TestGithubOrgClient(unittest.TestCase):
             ),
         result)
 
-@parameterized_class(('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'), TEST_PAYLOAD)
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    TEST_PAYLOAD
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """
     Integration test class for GithubOrgClient.
@@ -116,20 +119,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         JSON payloads based on the URL being requested.
         """
 
-        # This function will act as the 'side_effect' for 'requests.get'
         def requests_get_side_effect(url: str):
             """
             Custom side effect to mock requests.get(url).json()
             """
-            # Create a mock response object that has a .json() method
             mock_response = MagicMock()
 
-            # Determine which URL is being called and return the correct fixture
-
-            # The URL for the organization (we assume 'google' based on fixture)
             org_url = "https://api.github.com/orgs/google"
 
-            # The URL for the repos, taken from the 'org_payload' fixture
             repos_url = cls.org_payload["repos_url"]
 
             if url == org_url:
@@ -137,17 +134,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             elif url == repos_url:
                 mock_response.json.return_value = cls.repos_payload
             else:
-                # If an unexpected URL is called, return 404
                 mock_response.status_code = 404
                 mock_response.json.return_value = {"message": "Not Found"}
 
             return mock_response
 
-        # Start the patcher for 'requests.get' inside the 'utils' module.
-        # This is where 'get_json' (used by GithubOrgClient) makes its call.
         cls.get_patcher = patch('utils.requests.get')
 
-        # Start the patcher and set its side_effect
         mock_requests_get = cls.get_patcher.start()
         mock_requests_get.side_effect = requests_get_side_effect
 
@@ -166,13 +159,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         It should return all repo names from the 'repos_payload'.
         """
-        # Create an instance of the client (must be 'google' to match URLs)
         client_instance = client.GithubOrgClient("google")
 
-        # Call the method
         repos = client_instance.public_repos()
 
-        # Assert the result matches the 'expected_repos' fixture
         self.assertEqual(repos, self.expected_repos)
 
     def test_public_repos_with_license(self):
@@ -181,11 +171,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
         It should return only the repos matching that license.
         """
-        # Create an instance of the client
         client_instance = client.GithubOrgClient("google")
 
-        # Call the method with the license filter
         repos = client_instance.public_repos(license="apache-2.0")
 
-        # Assert the result matches the 'apache2_repos' fixture
         self.assertEqual(repos, self.apache2_repos)
