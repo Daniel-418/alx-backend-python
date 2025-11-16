@@ -30,7 +30,9 @@ class TestGithubOrgClient(unittest.TestCase):
         mocked_object.return_value = result
         org = client.GithubOrgClient(org_name)
         self.assertEqual(org.org, result)
-        mocked_object.assert_called_once_with(client.GithubOrgClient.ORG_URL.format(org=org_name))
+        mocked_object.assert_called_once_with(
+            client.GithubOrgClient.ORG_URL.format(org=org_name)
+        )
 
     def test_public_repos_url(self):
         """
@@ -65,4 +67,3 @@ class TestGithubOrgClient(unittest.TestCase):
             mocked_method.assert_called_once()
             mocked_object.assert_called_once()
             mocked_object.assert_called_once_with("https://api.github.com/orgs/test/repos")
-            
