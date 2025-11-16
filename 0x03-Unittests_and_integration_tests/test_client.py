@@ -97,7 +97,9 @@ class TestGithubOrgClient(unittest.TestCase):
             client.GithubOrgClient.has_license(
                 repo=repo, license_key=license_key
             ),
-        result)
+        result
+        )
+
 
 @parameterized_class(
     ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
