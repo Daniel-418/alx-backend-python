@@ -49,6 +49,9 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch('client.get_json')
     def test_public_repos(self, mocked_object: MagicMock):
+        """
+        Test to test the public repos url method
+        """
         mocked_object.return_value = [
             {"name": "repo-one"},
             {"name": "repo-two"},
