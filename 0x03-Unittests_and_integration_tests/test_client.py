@@ -4,7 +4,7 @@ Tests the utils module
 """
 from parameterized import parameterized
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 import client
 from typing import (
     Mapping,
@@ -31,3 +31,18 @@ class TestGithubOrgClient(unittest.TestCase):
         org = client.GithubOrgClient(org_name)
         self.assertEqual(org.org, result)
         mocked_object.assert_called_once_with(client.GithubOrgClient.ORG_URL.format(org=org_name))
+
+    def test_public_repos_url(self):
+        """
+        Test to test the public repos urls
+        """
+        known_org_payload = {"repos_url": "https://api.github.com/orgs/test/repos"}
+        with patch("client.GithubOrgClient.org", 
+                   new_callable=PropertyMock,
+                   return_value=known_org_payload) as mock_method:
+            dummy = client.GithubOrgClient('google')
+
+            result_url = dummy._public_repos_url
+
+            self.assertEqual(result_url, known_org_payload['repos_url'])
+            mock_method.assert_called_once()
