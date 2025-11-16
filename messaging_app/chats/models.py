@@ -41,15 +41,6 @@ class user(AbstractUser):
     )
 
 
-class Message(models.Model):
-    message_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    sender_id = models.ForeignKey(
-        user, on_delete=models.PROTECT, related_name="messages"
-    )
-    message_body = models.TextField()
-    sent_at = models.DateTimeField(auto_now_add=True)
-
-
 class Conversation(models.Model):
     conversation_id = models.UUIDField(
         primary_key=True, editable=False, default=uuid.uuid4
@@ -58,3 +49,15 @@ class Conversation(models.Model):
         user, on_delete=models.PROTECT, related_name="conversations"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Message(models.Model):
+    message_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    sender_id = models.ForeignKey(
+        user, on_delete=models.PROTECT, related_name="messages"
+    )
+    conversation_id = models.ForeignKey(
+        Conversation, on_delete=models.PROTECT, related_name="messages"
+    )
+    message_body = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
