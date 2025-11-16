@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import User, Conversation, Message
+from .models import user, Conversation, Message
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = user
         fields = [
             "user_id",
             "username",
@@ -25,7 +25,9 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ConversationSerializer(serializers.ModelSerializer):
-    participants = UserSerializer(many=True, read_only=True)
+    participants_ids = serializers.PrimaryKeyRelatedField(
+        many=True, write_only=True, source="participants"
+    )
     messages = MessageSerializer(many=True, read_only=True)
 
     class Meta:
