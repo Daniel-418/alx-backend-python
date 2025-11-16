@@ -1,29 +1,43 @@
 from rest_framework import serializers
-from .models import user, Conversation, Message
+from .models import User, Conversation, Message
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = user
-        exclude = ["password_hash"]
+        model = User
+        fields = [
+            "user_id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "role",
+        ]
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender_id = UserSerializer(read_only=True)
+    sender = UserSerializer(read_only=True)
 
     class Meta:
         model = Message
-        fields = "__all__"
+        fields = ["message_id", "sender", "message_body", "sent_at"]
 
 
 class ConversationSerializer(serializers.ModelSerializer):
-    messages = MessageSerializer(many=True, related_name="messages")
+    participants = UserSerializer(many=True, read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Conversation
-        fields = "__all__"
+        fields = [
+            "conversation_id",
+            "participants",
+            "created_at",
+            "messages",
+        ]
 
 
-# serializer.CharField
+# serializers.CharField
 # serializers.SerializerMethodField()
 # serializers.ValidationError
