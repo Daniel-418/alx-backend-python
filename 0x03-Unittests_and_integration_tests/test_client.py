@@ -106,16 +106,16 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     This class mocks the external 'requests.get' calls to test
     the 'public_repos' method.
     """
-    
+
     @classmethod
     def setUpClass(cls):
         """
         Set up the class by patching 'requests.get'.
-        
+
         The patcher uses a side_effect function to return different
         JSON payloads based on the URL being requested.
         """
-        
+
         # This function will act as the 'side_effect' for 'requests.get'
         def requests_get_side_effect(url: str):
             """
@@ -123,12 +123,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             """
             # Create a mock response object that has a .json() method
             mock_response = MagicMock()
-            
+
             # Determine which URL is being called and return the correct fixture
-            
+
             # The URL for the organization (we assume 'google' based on fixture)
             org_url = "https://api.github.com/orgs/google"
-            
+
             # The URL for the repos, taken from the 'org_payload' fixture
             repos_url = cls.org_payload["repos_url"]
 
@@ -140,13 +140,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                 # If an unexpected URL is called, return 404
                 mock_response.status_code = 404
                 mock_response.json.return_value = {"message": "Not Found"}
-            
+
             return mock_response
-        
+
         # Start the patcher for 'requests.get' inside the 'utils' module.
         # This is where 'get_json' (used by GithubOrgClient) makes its call.
         cls.get_patcher = patch('utils.requests.get')
-        
+
         # Start the patcher and set its side_effect
         mock_requests_get = cls.get_patcher.start()
         mock_requests_get.side_effect = requests_get_side_effect
