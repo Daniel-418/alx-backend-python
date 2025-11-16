@@ -77,4 +77,4 @@ class TestGithubOrgClient(unittest.TestCase):
             mocked_method.assert_called_once()
             mocked_object.assert_called_once()
             mocked_object.assert_called_once_with("https://api.github.com" +
-                                                    "/orgs/test/repos")
+                "/orgs/test/repos")
