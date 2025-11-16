@@ -79,3 +79,19 @@ class TestGithubOrgClient(unittest.TestCase):
             mocked_object.assert_called_once_with(
                 "https://api.github.com/orgs/test/repos"
             )
+
+    @parameterized.expand(
+        [
+            ({"license": {"key": "my_license"}}, "my_license", True),
+            ({"license": {"key": "other_license"}}, "my_license", False),
+        ]
+    )
+    def test_has_license(self, repo, license_key, result):
+        """
+        test the has_license method in the gihub repo file
+        """
+        self.assertEqual(
+            client.GithubOrgClient.has_license(
+                repo=repo, license_key=license_key
+            ),
+        result)
