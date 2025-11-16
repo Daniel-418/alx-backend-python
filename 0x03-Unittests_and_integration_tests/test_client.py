@@ -44,7 +44,7 @@ class TestGithubOrgClient(unittest.TestCase):
         known_org_payload = {
             "repos_url": "https://api.github.com/orgs/test/repos"
         }
-        with patch("client.GithubOrgClient.org", 
+        with patch("client.GithubOrgClient.org",
                    new_callable=PropertyMock,
                    return_value=known_org_payload) as mock_method:
             dummy = client.GithubOrgClient('google')
@@ -66,9 +66,9 @@ class TestGithubOrgClient(unittest.TestCase):
             {"name": "repo-two"},
             {"name": "repo-three"},
         ]
-        with patch('client.GithubOrgClient._public_repos_url', 
+        with patch('client.GithubOrgClient._public_repos_url',
                    new_callable=PropertyMock,
-                   return_value="https://api.github.com/" + 
+                   return_value="https://api.github.com/" +
                    "orgs/test/repos") as mocked_method:
             dummy = client.GithubOrgClient("google")
             self.assertEqual(dummy.public_repos(), [
@@ -77,4 +77,4 @@ class TestGithubOrgClient(unittest.TestCase):
             mocked_method.assert_called_once()
             mocked_object.assert_called_once()
             mocked_object.assert_called_once_with("https://api.github.com" +
-                "/orgs/test/repos")
+            "/orgs/test/repos")
