@@ -100,7 +100,6 @@ class TestGithubOrgClient(unittest.TestCase):
             result
         )
 
-
 @parameterized_class(
     ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
     TEST_PAYLOAD
@@ -112,7 +111,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     the 'public_repos' method.
     """
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """
         Set up the class by patching 'requests.get'.
 
@@ -128,28 +128,29 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
             org_url = "https://api.github.com/orgs/google"
 
-            repos_url = self.org_payload["repos_url"]
+            repos_url = cls.org_payload["repos_url"]
 
             if url == org_url:
-                mock_response.json.return_value = self.org_payload
+                mock_response.json.return_value = cls.org_payload
             elif url == repos_url:
-                mock_response.json.return_value = self.repos_payload
+                mock_response.json.return_value = cls.repos_payload
             else:
                 mock_response.status_code = 404
                 mock_response.json.return_value = {"message": "Not Found"}
 
             return mock_response
 
-        self.get_patcher = patch('utils.requests.get')
+        cls.get_patcher = patch('utils.requests.get')
 
-        mock_requests_get = self.get_patcher.start()
+        mock_requests_get = cls.get_patcher.start()
         mock_requests_get.side_effect = requests_get_side_effect
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         """
         Stop the patcher after all tests are run.
         """
-        self.get_patcher.stop()
+        cls.get_patcher.stop()
 
     # --- Task 9: Implement the tests ---
 
