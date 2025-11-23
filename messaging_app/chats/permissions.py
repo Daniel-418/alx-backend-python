@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions
 
-from messaging_app.chats.models import Conversation
+from .models import Conversation
 
 
 class IsParticipantOfConversation(permissions.BasePermission):
@@ -13,7 +13,7 @@ class IsParticipantOfConversation(permissions.BasePermission):
         if request.method in allowed_methods:
             conversation_id = view.kwargs.get("conversation_pk")
             return Conversation.objects.filter(  # pyright: ignore
-                pk=conversation_id, participants=request.User
+                pk=conversation_id, participants=request.user
             ).exists()
 
         return False
