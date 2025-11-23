@@ -7,6 +7,8 @@ from messaging_app.chats.models import Conversation
 class IsParticipantOfConversation(permissions.BasePermission):
     def has_permission(self, request, view):
         conversation_id = view.kwargs.get("conversation_pk")
-        return Conversation.objects.filter(
-            pk=conversation_id, participants=request.user
-        ).exists()
+        user = request.user
+        return (
+            Conversation.objects.filter(pk=conversation_id, participants=user).exists()
+            and user.isauthenticated()
+        )
