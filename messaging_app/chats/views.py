@@ -41,4 +41,4 @@ class MessageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         conversation_uid = self.kwargs["conversation_pk"]
 
-        serializer.save(sender_id=self.request.user, conversation=conversation_uid)
+        serializer.save(sender_id=self.request.user, conversation_id=conversation_uid)
