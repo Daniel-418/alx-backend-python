@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import PermissionDenied
 from .models import Conversation, User, Message
@@ -27,7 +28,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     queryset = Message.objects.none()  # pyright: ignore
-    permission_classes = [IsParticipantOfConversation]
+    permission_classes = [IsParticipantOfConversation, IsAuthenticated]
 
     def get_queryset(self):
         return (
