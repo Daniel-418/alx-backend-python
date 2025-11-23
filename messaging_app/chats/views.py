@@ -43,3 +43,18 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation_uid = self.kwargs["conversation_pk"]
 
         serializer.save(sender_id=self.request.user, conversation_id=conversation_uid)
+
+    def create(self, request, *args, **kwargs):
+        conversation_id = self.kwargs.get("conversation_pk")
+
+        is_participant = Conversation.objects.filter(
+            pk=conversation_id, participants=request.user
+        ).exists()
+
+        if not is_participant:
+            return Response(
+                {"detail": "You are not a participant of this conversation"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        return super().create(request, *args, **kwargs)
