@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import PermissionDenied
 from .models import Conversation, User, Message
 from .serializers import ConversationSerializer, MessageSerializer
+from .permissions import IsParticipantOfConversation
 
 
 # Create your views here.
@@ -26,12 +27,12 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     queryset = Message.objects.none()  # pyright: ignore
+    permission_classes = [IsParticipantOfConversation]
 
     def get_queryset(self):
         return (
             Message.objects.filter(  # pyright: ignore
                 conversation_id=self.kwargs["conversation_pk"],
-                conversation_id__participants=self.request.user,
             )
             .select_related("sender_id")
             .order_by("sent_at")
@@ -39,8 +40,5 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         conversation_uid = self.kwargs["conversation_pk"]
-        conversation = get_object_or_404(Conversation, pk=conversation_uid)
-        if self.request.user not in conversation.participants.all():
-            raise PermissionDenied("you are not a part of this conversation")
 
-        serializer.save(sender_id=self.request.user, conversation=conversation)
+        serializer.save(sender_id=self.request.user, conversation=conversation_uid)
