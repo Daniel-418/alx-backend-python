@@ -3,6 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import PermissionDenied
+
+from .filters import MessageFilter
 from .models import Conversation, User, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsParticipantOfConversation
@@ -16,9 +18,13 @@ class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.none()
 
     def get_queryset(self):
-        return self.request.user.conversations.prefetch_related(  # pyright: ignore
-            "participants", "messages"
-        ).all()
+        return (
+            self.request.user.conversations.prefetch_related(  # pyright: ignore
+                "participants", "messages"
+            )
+            .order_by("-created_at")
+            .all()
+        )
 
     def perform_create(self, serializer):
         participants = serializer.validated_data.get("participants", [])
@@ -32,6 +38,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.none()  # pyright: ignore
     permission_classes = [IsParticipantOfConversation, IsAuthenticated]
     pagination_class = MessagesPagination
+    filterset_class = MessageFilter
 
     def get_queryset(self):  # pyright: ignore
         return (
