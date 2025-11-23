@@ -35,11 +35,10 @@ class RestrictAccessByTimeMiddleware:
         start_time = time(18, 0)
         end_time = time(21, 0)
 
-        print("middleware ran hurray!!!")
         if not (start_time <= current_local_time <= end_time):
             return HttpResponseForbidden(
                 content=f"Office hours are strictly {start_time} to {end_time} and it is {current_local_time.strftime('%H:%M')}."  # pyright: ignore
             )
-        else:
-            response = self.get_response(request)
-            return response
+        response = self.get_response(request)
+        return response
+
