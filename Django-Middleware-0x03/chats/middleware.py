@@ -6,6 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.core import cache
 from django.core.cache import cache
 import re
+from .models import User
 
 
 def get_client_ip(request):
@@ -50,10 +51,10 @@ class RestrictAccessByTimeMiddleware:
         start_time = time(18, 0)
         end_time = time(21, 0)
 
-        # if not (start_time <= current_local_time <= end_time):
-        #     return HttpResponseForbidden(
-        #         content=f"Office hours are strictly {start_time} to {end_time} and it is {current_local_time.strftime('%H:%M')}."  # pyright: ignore
-        #     )
+        if not (start_time <= current_local_time <= end_time):
+            return HttpResponseForbidden(
+                content=f"Office hours are strictly {start_time} to {end_time} and it is {current_local_time.strftime('%H:%M')}."  # pyright: ignore
+            )
         with open("requests.log", "a", encoding="utf-8") as f:
             log_str = f"{datetime.now()} - User: {request.user} -Path: {request.path} -IP: {get_client_ip(request)}\n"
             f.write(log_str)
@@ -89,5 +90,19 @@ class OffensiveLanguageMiddleware:
                             cache.incr(cache_key)
                         except ValueError:
                             cache.set(cache_key, 1, self.message_timeout)
+        response = self.get_response(request)
+        return response
+
+
+class RolepermisssionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        user = request.user
+        if user.role != User.Roles.ADMIN and user.role != User.Roles.HOST:
+            return HttpResponseForbidden(
+                content=b"you need to be an admin or host to access this page"
+            )
         response = self.get_response(request)
         return response
