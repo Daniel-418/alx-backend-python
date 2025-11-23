@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import user, Conversation, Message
+from .models import User, Conversation, Message
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = user
+        model = User
         fields = [
             "user_id",
             "username",
@@ -25,8 +25,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ConversationSerializer(serializers.ModelSerializer):
-    participants_ids = serializers.PrimaryKeyRelatedField(
-        many=True, write_only=True, source="participants"
+    participants = serializers.PrimaryKeyRelatedField(
+        many=True, write_only=True, queryset=User.objects.all()
     )
     messages = MessageSerializer(many=True, read_only=True)
 
@@ -38,8 +38,3 @@ class ConversationSerializer(serializers.ModelSerializer):
             "created_at",
             "messages",
         ]
-
-
-# serializers.CharField
-# serializers.SerializerMethodField()
-# serializers.ValidationError
