@@ -6,15 +6,17 @@ from rest_framework.views import PermissionDenied
 from .models import Conversation, User, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsParticipantOfConversation
+from django.db.models import QuerySet
+from .pagination import MessagesPagination
 
 
 # Create your views here.
 class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
-    queryset = Conversation.objects.none()  # pyright: ignore
+    queryset = Conversation.objects.none()
 
     def get_queryset(self):
-        return self.request.user.conversations.prefetch_related(
+        return self.request.user.conversations.prefetch_related(  # pyright: ignore
             "participants", "messages"
         ).all()
 
@@ -29,10 +31,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     queryset = Message.objects.none()  # pyright: ignore
     permission_classes = [IsParticipantOfConversation, IsAuthenticated]
+    pagination_class = MessagesPagination
 
-    def get_queryset(self):
+    def get_queryset(self):  # pyright: ignore
         return (
-            Message.objects.filter(  # pyright: ignore
+            Message.objects.filter(
                 conversation_id=self.kwargs["conversation_pk"],
             )
             .select_related("sender_id")
