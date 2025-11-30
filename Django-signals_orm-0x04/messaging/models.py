@@ -58,7 +58,7 @@ class MessageHistory(models.Model):
     message = models.ForeignKey(
         Message, on_delete=models.PROTECT, related_name="history"
     )
-    edited_at = models.DateTimeField(auto_now_add=True)
+    edited_by = models.DateTimeField(auto_now_add=True)
 
     old_content = models.TextField()
 
