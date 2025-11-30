@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "chats",
+    "messaging",
     "rest_framework_nested",
     "drf_spectacular",
     "django_filters",
