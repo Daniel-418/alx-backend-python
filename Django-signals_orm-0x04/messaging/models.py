@@ -39,6 +39,8 @@ class Message(models.Model):
     )
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    edited = models.BooleanField(default=False)
 
 
 class Notification(models.Model):
@@ -49,5 +51,5 @@ class Notification(models.Model):
         User, on_delete=models.PROTECT, related_name="notifications"
     )
     message = models.ForeignKey(
-        Message, on_delete=models.PROTECT, related_name="notification"
+        Message, on_delete=models.PROTECT, related_name="notifications"
     )
