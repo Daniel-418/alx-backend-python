@@ -1,8 +1,8 @@
 from typing import Any, Type
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
-from .models import Message, Notification, MessageHistory
+from .models import Message, Notification, MessageHistory, User
 
 
 @receiver(post_save, sender=Message)
@@ -27,3 +27,10 @@ def log_edits(sender: Type[Message], instance: Message, **kwargs: Any):
         )
 
     instance.edited = True
+
+
+@receiver(post_delete, sender=User)
+def cleanup_user_data(sender, instance, **kwargs):
+    Message.objects.filter(sender=instance).delete()
+    Message.objects.filter(receiver=instance).delete()
+    MessageHistory.objects.filter(edited_by=instance).delete()
