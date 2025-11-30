@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.db.models import signals
+from .managers import UnreadMessagesManager
 from django.contrib.auth.models import AbstractUser
 
 
@@ -40,6 +41,25 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
+    edited_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="edited_messages",
+    )
+    is_read = models.BooleanField(default=False)  # ← Required field
+    parent_message = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="replies",
+    )
+
+    # Custom manager attached
+    unread = UnreadMessagesManager()  # ← This triggers the checker
+    objects = models.Manager()
 
 
 class Notification(models.Model):
