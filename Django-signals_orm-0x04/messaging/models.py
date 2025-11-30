@@ -39,8 +39,6 @@ class Message(models.Model):
     )
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    edit_histroy = models.JSONField(default=list, blank=True)
-    updated_at = models.DateTimeField(auto_now=True)
     edited = models.BooleanField(default=False)
 
 
@@ -54,3 +52,15 @@ class Notification(models.Model):
     message = models.ForeignKey(
         Message, on_delete=models.PROTECT, related_name="notifications"
     )
+
+
+class MessageHistory(models.Model):
+    message = models.ForeignKey(
+        Message, on_delete=models.PROTECT, related_name="history"
+    )
+    edited_at = models.DateTimeField(auto_now_add=True)
+
+    old_content = models.TextField()
+
+    class Meta:
+        ordering = ["-edited_at"]
