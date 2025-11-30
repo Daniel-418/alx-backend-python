@@ -21,7 +21,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ["message_id", "sender", "message_body", "sent_at"]
+        fields = ["message_id", "sender", "message_body", "edit_historysent_at"]
 
 
 class NotificationSerializer(serializers.ModelSerializer):
