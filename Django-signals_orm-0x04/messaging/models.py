@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.db.models import signals
 from django.contrib.auth.models import AbstractUser
 
 
@@ -27,12 +28,26 @@ class Conversation(models.Model):
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    sender_id = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="messages"
+    sender = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="sent_messages"
+    )
+    receiver = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="recieved_messages"
     )
     conversation = models.ForeignKey(
         Conversation, on_delete=models.PROTECT, related_name="messages"
     )
-    message_body = models.TextField()
-    sent_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
+
+class Notification(models.Model):
+    notification_id = models.UUIDField(
+        primary_key=True, editable=False, default=uuid.uuid4
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="notifications"
+    )
+    message = models.ForeignKey(
+        Message, on_delete=models.PROTECT, related_name="notification"
+    )
