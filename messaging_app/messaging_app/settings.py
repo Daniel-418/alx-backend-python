@@ -111,9 +111,9 @@ WSGI_APPLICATION = "messaging_app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "mysql.connector.django",
-        "NAME": environ.get("DB_NAME"),
-        "USER": environ.get("DB_USER"),
-        "PASSWORD": environ.get("DB_PASSWORD"),
+        "NAME": environ.get("MYSQL_DB"),
+        "USER": environ.get("MYSQL_USER"),
+        "PASSWORD": environ.get("MYSQL_PASSWORD"),
         "HOST": environ.get("DB_HOST"),
         "PORT": environ.get("DB_PORT"),
         "OPTIONS": {
