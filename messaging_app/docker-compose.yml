@@ -13,6 +13,7 @@ services:
       - MYSQL_PASSWORD=root
       - DB_HOST=db
       - DB_PORT=3306
+      # python manage.py runserver
 
   db:
     image: mysql:8
