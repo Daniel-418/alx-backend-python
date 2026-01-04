@@ -10,8 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from os import environ
 from pathlib import Path
 from datetime import timedelta
+
+import os
+
+print("--- DEBUGGING DATABASE CONFIG ---")
+print(f"DB_NAME is: {os.environ.get('DB_NAME')}")
+print(f"DB_HOST is: {os.environ.get('DB_HOST')}")
+print("---------------------------------")
+# ----------------------------------
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -101,8 +110,15 @@ WSGI_APPLICATION = "messaging_app.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "mysql.connector.django",
+        "NAME": environ.get("DB_NAME"),
+        "USER": environ.get("DB_USER"),
+        "PASSWORD": environ.get("DB_PASSWORD"),
+        "HOST": environ.get("DB_HOST"),
+        "PORT": environ.get("DB_PORT"),
+        "OPTIONS": {
+            "autocommit": True,
+        },
     }
 }
 
