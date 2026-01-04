@@ -20,3 +20,8 @@ services:
     environment:
       - MYSQL_DATABASE=mydb
       - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - messaging_app_data:/var/lib/mysql
+
+volumes:
+  messaging_app_data:
